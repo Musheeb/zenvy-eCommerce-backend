@@ -45,10 +45,12 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+      select: false,
     },
     googleId: {
       type: String,
       default: null,
+      select: false,
     },
     authplatform: {
       type: String,

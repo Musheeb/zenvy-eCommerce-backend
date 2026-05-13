@@ -1,5 +1,6 @@
 {
   "AUTH": {
-    "REGISTER_SUCCESS": "User registered successfully."
+    "REGISTER_SUCCESS": "User registered successfully.",
+    "EMAIL_ALREADY_EXISTS": "Email already exists."
   }
 }
