@@ -24,10 +24,15 @@ exports.register = async (req, res, next) => {
       email: req.body.email,
       role: "user",
     });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.STAGE === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Cookies life will be 7 days.
+    });
     return res.status(200).json({
       message: req.t("AUTH.REGISTER_SUCCESS"),
       data: userObj,
-      refreshToken,
       accessToken,
     });
   } catch (e) {

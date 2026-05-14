@@ -6,7 +6,15 @@ const morgan = require("morgan");
 const middleware = require("i18next-http-middleware");
 const i18next = require("./config/i18n.js");
 
-app.use(cors());
+app.use(
+  cors({
+    origin:
+      process.env.STAGE === "development"
+        ? "http://localhost:5173"
+        : "frontendURLHere",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
