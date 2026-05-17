@@ -28,14 +28,56 @@ exports.register = async (req, res, next) => {
       httpOnly: true,
       secure: process.env.STAGE === "production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // Cookies life will be 7 days.
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Refresh token cookies life will be 7 days.
     });
-    return res.status(200).json({
+    return res.status(201).json({
       message: req.t("AUTH.REGISTER_SUCCESS"),
       data: userObj,
       accessToken,
     });
   } catch (e) {
+    next(e);
+  }
+};
+
+exports.login = async (req, res, next) => {
+  try {
+    validate(UserSchema.LOGIN, req.body);
+    const password = req.body.password;
+    const email = req.body.email.trim().toLowerCase();
+    const user = await UserService.verifyEmailAddress(email);
+    if (!user) {
+      return res.status(400).json({
+        message: req.t("AUTH.INVALID_CREDENTIALS"),
+      });
+    }
+    const validatedPassword = await UserService.validateUserPassword(
+      user,
+      password,
+    );
+    if (!validatedPassword) {
+      return res.status(400).json({
+        message: req.t("AUTH.INVALID_CREDENTIALS"),
+      });
+    }
+    const { accessToken, refreshToken } = generateJwt({
+      _id: user._id,
+      email: email,
+      role: user.role,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.STAGE === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Refresh token cookies life will be 7 days.
+    });
+    return res.status(200).json({
+      message: req.t("AUTH.LOGIN_SUCCESS"),
+      data: "User data",
+      accessToken,
+    });
+  } catch (e) {
+    console.log(e);
     next(e);
   }
 };
