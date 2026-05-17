@@ -1,6 +1,8 @@
 {
   "AUTH": {
     "REGISTER_SUCCESS": "User registered successfully.",
-    "EMAIL_ALREADY_EXISTS": "Email already exists."
+    "EMAIL_ALREADY_EXISTS": "Email already exists.",
+    "INVALID_CREDENTIALS": "Email or Password is incorrect.",
+    "LOGIN_SUCCESS": "Logged in successfully"
   }
 }
