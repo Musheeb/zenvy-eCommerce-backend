@@ -3,6 +3,8 @@
     "REGISTER_SUCCESS": "User registered successfully.",
     "EMAIL_ALREADY_EXISTS": "Email already exists.",
     "INVALID_CREDENTIALS": "Email or Password is incorrect.",
-    "LOGIN_SUCCESS": "Logged in successfully"
+    "LOGIN_SUCCESS": "Logged in successfully",
+    "LINK_SENT_TO_PROVIDED_EMAIL": "Reset password link sent to email.",
+    "EMAIL_DOES_NOT_EXIST": "Email does not exist."
   }
 }

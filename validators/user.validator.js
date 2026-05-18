@@ -10,4 +10,7 @@ exports.UserSchema = {
     email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
+  FORGOT_PASSWORD: Joi.object({
+    email: Joi.string().email().required(),
+  }),
 };
