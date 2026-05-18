@@ -4,6 +4,7 @@ const { UserSchema } = require("../validators/user.validator");
 const generateJwt = require("../utils/generateJwt");
 
 const UserService = require("../services/user.services");
+const { sendEmail } = require("../emails/sendEmail");
 
 exports.register = async (req, res, next) => {
   try {
@@ -78,6 +79,26 @@ exports.login = async (req, res, next) => {
     });
   } catch (e) {
     console.log(e);
+    next(e);
+  }
+};
+
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    validate(UserSchema.FORGOT_PASSWORD, req.body);
+    const email = req.body.email.trim().toLowerCase();
+    const user = await UserService.verifyEmailAddress(email);
+    if (!user) {
+      return res.status(400).json({
+        message: req.t("AUTH.EMAIL_DOES_NOT_EXIST"),
+      });
+    }
+    await sendEmail(email);
+    return res.status(200).json({
+      message: req.t("AUTH.LINK_SENT_TO_PROVIDED_EMAIL"),
+      data: email,
+    });
+  } catch (e) {
     next(e);
   }
 };
