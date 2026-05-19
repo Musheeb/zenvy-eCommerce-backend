@@ -4,6 +4,8 @@ const { UserSchema } = require("../validators/user.validator");
 const generateJwt = require("../utils/generateJwt");
 
 const UserService = require("../services/user.services");
+const ResetPasswordService = require("../services/resetPassword.services");
+
 const { sendEmail } = require("../emails/sendEmail");
 
 exports.register = async (req, res, next) => {
@@ -93,10 +95,11 @@ exports.forgotPassword = async (req, res, next) => {
         message: req.t("AUTH.EMAIL_DOES_NOT_EXIST"),
       });
     }
-    await sendEmail(email);
+    const resetPasswordLink =
+      await ResetPasswordService.generateAndSaveResetPasswordLink(user._id);
+    await sendEmail(resetPasswordLink, email);
     return res.status(200).json({
       message: req.t("AUTH.LINK_SENT_TO_PROVIDED_EMAIL"),
-      data: email,
     });
   } catch (e) {
     next(e);

@@ -30,7 +30,7 @@ const PORT = process.env.PORT || 3000;
 const connectDb = require("./db/config.js");
 
 app.use((err, req, res, next) => {
-  console.log(err.message);
+  console.log(err);
   res.status(err.statusCode || 500).json({
     message: err.message || "Internal server error",
   });
