@@ -13,4 +13,11 @@ exports.UserSchema = {
   FORGOT_PASSWORD: Joi.object({
     email: Joi.string().email().required(),
   }),
+  RESET_PASSWORD_TOKEN: Joi.object({
+    token: Joi.string().required(),
+  }),
+  RESET_PASSWORD: Joi.object({
+    password: Joi.string().required(),
+    confirmPassword: Joi.string().required(),
+  }),
 };

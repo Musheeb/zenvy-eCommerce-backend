@@ -10,12 +10,28 @@ exports.create = async (data) => {
   }
 };
 
+exports.removeAll = async (userId) => {
+  try {
+    return await ResetPasswordModel.deleteMany({ user: userId });
+  } catch (e) {
+    throw e;
+  }
+};
+
+exports.getByToken = async (token) => {
+  try {
+    return await ResetPasswordModel.findOne({ token });
+  } catch (e) {
+    throw e;
+  }
+};
+
 exports.getHashtoken = function (token) {
   return crypto.createHash("sha256").update(token).digest("hex");
 };
 
 exports.generateResetPasswordLink = function (hashedToken) {
-  return `${process.env.BASE_URL}/reset-password/:${hashedToken}`;
+  return `${process.env.BASE_URL}/reset-password/${hashedToken}`;
 };
 
 exports.generateAndSaveResetPasswordLink = async (userId) => {
@@ -31,7 +47,7 @@ exports.generateAndSaveResetPasswordLink = async (userId) => {
       tokenValidTill: Date.now() + 5 * 60 * 1000, // document will be alive for 5 minutes only in DB.
     });
     if (savedData) {
-      return await this.generateResetPasswordLink(hashedToken);
+      return await this.generateResetPasswordLink(rawToken);
     }
     return null;
   } catch (e) {

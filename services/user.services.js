@@ -18,6 +18,18 @@ exports.get = async (id) => {
   }
 };
 
+exports.patch = async (id, data, params = {}) => {
+  try {
+    return await UserModel.findByIdAndUpdate(
+      id,
+      { ...data },
+      { returnDocument: "after" },
+    );
+  } catch (e) {
+    throw e;
+  }
+};
+
 exports.verifyEmailAddress = async (email) => {
   try {
     return await UserModel.findOne({ email });
@@ -41,4 +53,8 @@ exports.validateUserPassword = async (user, password) => {
   } catch (e) {
     throw e;
   }
+};
+
+exports.getHashedPassword = async (password) => {
+  return await bcrypt.hash(password, 10);
 };
