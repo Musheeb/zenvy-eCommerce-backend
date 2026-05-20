@@ -5,6 +5,9 @@
     "INVALID_CREDENTIALS": "Email or Password is incorrect.",
     "LOGIN_SUCCESS": "Logged in successfully",
     "LINK_SENT_TO_PROVIDED_EMAIL": "Reset password link sent to email.",
-    "EMAIL_DOES_NOT_EXIST": "Email does not exist."
+    "EMAIL_DOES_NOT_EXIST": "Email does not exist.",
+    "PASSWORD_CONFIRM_PASSWORD_DIFFERENT": "Password and Confirm confirm password should be same.",
+    "SESSION_EXPIRED": "You session to reset password has been expired.",
+    "PASSWORD_RESET_SUCCESSFULLY": "Congratulations 🎉! Your password has been reset successfully."
   }
 }

@@ -105,3 +105,32 @@ exports.forgotPassword = async (req, res, next) => {
     next(e);
   }
 };
+
+exports.resetPassword = async (req, res, next) => {
+  try {
+    validate(UserSchema.RESET_PASSWORD_TOKEN, req.params);
+    validate(UserSchema.RESET_PASSWORD, req.body);
+    const { token } = req.params;
+    const { password, confirmPassword } = req.body;
+    if (password.toString() !== confirmPassword.toString()) {
+      return res.status(400).json({
+        message: req.t("AUTH.PASSWORD_CONFIRM_PASSWORD_DIFFERENT"),
+      });
+    }
+    const hashedToken = ResetPasswordService.getHashtoken(token);
+    const tokenDocument = await ResetPasswordService.getByToken(hashedToken);
+    if (!tokenDocument || tokenDocument.tokenValidTill < new Date()) {
+      return res.status(401).json({
+        message: req.t("AUTH.SESSION_EXPIRED"),
+      });
+    }
+    const hashedPassword = await UserService.getHashedPassword(password);
+    await UserService.patch(tokenDocument?.user, { password: hashedPassword });
+    await ResetPasswordService.removeAll(tokenDocument.user);
+    return res.status(200).json({
+      message: req.t("AUTH.PASSWORD_RESET_SUCCESSFULLY"),
+    });
+  } catch (e) {
+    next(e);
+  }
+};
