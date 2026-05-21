@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const ProductSchema = new mongoose.Schema(
   {
-    name: {
+    productTitle: {
       type: String,
       required: [true, "Name is required"],
       minLength: [3, "Name must be at least 3 characters"],
@@ -10,7 +10,8 @@ const ProductSchema = new mongoose.Schema(
     },
     sku: {
       // Stock keeping unit.
-      type: Number,
+      //CATEGORY-BRAND-TYPE-VARIANT-ID eg. TSHIRT-NIKE-BLK-XL-0001
+      type: String,
       required: true,
       unique: true,
     },
@@ -43,6 +44,10 @@ const ProductSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    description: {
+      type: String,
+      default: null,
     },
   },
   {

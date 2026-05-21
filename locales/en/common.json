@@ -8,6 +8,13 @@
     "EMAIL_DOES_NOT_EXIST": "Email does not exist.",
     "PASSWORD_CONFIRM_PASSWORD_DIFFERENT": "Password and Confirm confirm password should be same.",
     "SESSION_EXPIRED": "You session to reset password has been expired.",
-    "PASSWORD_RESET_SUCCESSFULLY": "Congratulations 🎉! Your password has been reset successfully."
+    "PASSWORD_RESET_SUCCESSFULLY": "Congratulations 🎉! Your password has been reset successfully.",
+    "UNAUTHORIZED": "Session expired",
+    "AUTH_TOKEN_MISSING_OR_EXPIRED": "Authorization token missing or expired.",
+    "USER_NOT_FOUND": "User not found!",
+    "TEMPERED_TOKEN": "Unauthorized access! Token is tempered."
+  },
+  "PRODUCT": {
+    "PRODUCT_CREATED": "New product created successfully"
   }
 }
