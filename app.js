@@ -23,10 +23,12 @@ app.use(middleware.handle(i18next));
 const adminRoutes = require("./routes/admin.router.js");
 const userRoutes = require("./routes/user.router.js");
 const productRoutes = require("./routes/product.router.js");
+const categoryRoutes = require("./routes/categoryMaster.router.js");
 
 adminRoutes(app);
 userRoutes(app);
 productRoutes(app);
+categoryRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const connectDb = require("./db/config.js");
