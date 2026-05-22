@@ -26,13 +26,13 @@ module.exports = async (req, res, next) => {
   } catch (e) {
     if (e.name === "TokenExpiredError") {
       return res.status(401).json({
-        message: "AUTH.UNAUTHORIZED",
+        message: req.t("AUTH.UNAUTHORIZED"),
       });
     }
 
     if (e.name === "JsonWebTokenError") {
       return res.status(401).json({
-        message: "AUTH.TEMPERED_TOKEN",
+        message: req.t("AUTH.TEMPERED_TOKEN"),
       });
     }
   }

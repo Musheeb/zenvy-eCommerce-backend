@@ -16,5 +16,8 @@
   },
   "PRODUCT": {
     "PRODUCT_CREATED": "New product created successfully"
+  },
+  "CATEGORY": {
+    "CREATED": "Category created successfully."
   }
 }
