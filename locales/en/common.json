@@ -18,6 +18,7 @@
     "PRODUCT_CREATED": "New product created successfully"
   },
   "CATEGORY": {
-    "CREATED": "Category created successfully."
+    "CREATED": "Category created successfully.",
+    "CATEGORY_ALREADY_EXISTS": "Category with the same name already exists."
   }
 }
