@@ -23,7 +23,7 @@ app.use(middleware.handle(i18next));
 const adminRoutes = require("./routes/admin.router.js");
 const userRoutes = require("./routes/user.router.js");
 const productRoutes = require("./routes/product.router.js");
-const categoryRoutes = require("./routes/categoryMaster.router.js");
+const categoryRoutes = require("./routes/masterCategory.router.js");
 
 adminRoutes(app);
 userRoutes(app);
