@@ -19,6 +19,7 @@
   },
   "CATEGORY": {
     "CREATED": "Category created successfully.",
-    "CATEGORY_ALREADY_EXISTS": "Category with the same name already exists."
+    "CATEGORY_ALREADY_EXISTS": "Category with the same name already exists.",
+    "CATEGORIES_LIST_FETCHED": "Categories list fetched successfully"
   }
 }

@@ -26,3 +26,16 @@ exports.addCategory = async (req, res, next) => {
     next(e);
   }
 };
+
+exports.getCategories = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const categories = await CategoryService.getAllCategories(userId);
+    return res.status(200).json({
+      message: req.t("CATEGORY.CATEGORIES_LIST_FETCHED"),
+      data: categories,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
