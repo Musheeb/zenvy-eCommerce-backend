@@ -16,7 +16,22 @@ const ProductSchema = new mongoose.Schema(
       unique: true,
     },
     images: {
-      type: [String], //There will be image URLs as we are using cloudinary here.
+      type: [
+        {
+          isPrimary: {
+            type: Boolean,
+            default: false,
+          },
+          url: {
+            type: String,
+            required: true,
+          },
+          publicId: {
+            type: String,
+            required: true,
+          },
+        },
+      ], //There will be image URLs as we are using cloudinary here.
       default: [],
     },
     category: {
