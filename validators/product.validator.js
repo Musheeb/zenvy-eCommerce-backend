@@ -7,7 +7,14 @@ exports.ProductSchema = {
     productTitle: Joi.string().max(30).required(),
     category: Joi.string().pattern(MONGO_ID_REGEX).required().strict(),
     sku: Joi.string().required(), //CATEGORY-BRAND-TYPE-VARIANT-ID
-    images: Joi.array().items(Joi.string()).max(4),
+    // images: Joi.array().items(Joi.string()).max(4),
+    images: Joi.array().items(
+      Joi.object({
+        publicId: Joi.string().required(),
+        isPrimary: Joi.boolean().default(false),
+        url: Joi.string().required(),
+      }),
+    ),
     description: Joi.string().max(1000),
     quantity: Joi.number(),
     currency: Joi.string(),
