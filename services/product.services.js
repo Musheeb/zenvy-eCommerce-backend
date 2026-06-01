@@ -7,3 +7,11 @@ exports.create = async (data) => {
     throw e;
   }
 };
+
+exports.checkSkuDuplication = async (sku) => {
+  try {
+    return await ProductModel.findOne({ sku });
+  } catch (e) {
+    throw e;
+  }
+};
