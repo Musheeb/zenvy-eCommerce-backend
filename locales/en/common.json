@@ -15,7 +15,8 @@
     "TEMPERED_TOKEN": "Unauthorized access! Token is tempered."
   },
   "PRODUCT": {
-    "PRODUCT_CREATED": "New product created successfully"
+    "PRODUCT_CREATED": "New product created successfully",
+    "SKU_ALREADY_EXISTS": "sku already exists."
   },
   "CATEGORY": {
     "CREATED": "Category created successfully.",

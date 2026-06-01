@@ -22,6 +22,13 @@ exports.addProducts = async (req, res, next) => {
       });
     }
 
+    const sku = await ProductService.checkSkuDuplication(req.body.sku);
+    if (sku) {
+      return res.status(400).json({
+        message: req.t("PRODUCT.SKU_ALREADY_EXISTS"),
+      });
+    }
+
     const product = await ProductService.create({
       ...req.body,
       images: uploadedImages,
