@@ -18,9 +18,9 @@ exports.getByName = async (query) => {
 
 exports.getAllCategories = async (userId) => {
   try {
-    return await CategoryModel.find({ addedBy: userId, isActive: true }).select(
-      "_id name isActive addedBy createdAt",
-    );
+    return await CategoryModel.find({ addedBy: userId, isActive: true })
+      .select("_id name isActive addedBy createdAt")
+      .sort({ createdAt: -1 });
   } catch (e) {
     throw e;
   }
