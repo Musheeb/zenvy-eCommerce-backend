@@ -39,3 +39,13 @@ exports.getCategories = async (req, res, next) => {
     next(e);
   }
 };
+
+exports.deleteCategory = async (req, res, next) => {
+  try {
+    return res.status(200).json({
+      message: req.t("CATEGORY.CATEGORY_DELETED"),
+    });
+  } catch (e) {
+    next(e);
+  }
+};
