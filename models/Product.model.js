@@ -6,7 +6,7 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: [true, "Name is required"],
       minLength: [3, "Name must be at least 3 characters"],
-      maxLength: [40, "Name cannot exceed 40 characters"],
+      maxLength: [50, "Name cannot exceed 40 characters"],
     },
     sku: {
       // Stock keeping unit.

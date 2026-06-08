@@ -1,6 +1,7 @@
-const CategoryService = require("../services/masterCategory.services");
-const { CategorySchema } = require("../validators/masterCategory.validator");
-const { validate } = require("../validators/validate.validator");
+const CategoryService = require("../../services/masterCategory.services");
+const ProductService = require("../../services/product.services");
+const { CategorySchema } = require("../../validators/masterCategory.validator");
+const { validate } = require("../../validators/validate.validator");
 
 exports.addCategory = async (req, res, next) => {
   try {
@@ -42,8 +43,23 @@ exports.getCategories = async (req, res, next) => {
 
 exports.deleteCategory = async (req, res, next) => {
   try {
-    return res.status(200).json({
-      message: req.t("CATEGORY.CATEGORY_DELETED"),
+    validate(CategorySchema.DELETE_CATEGORY, req.params);
+    const { categoryId } = req.params;
+    const category = await CategoryService.get(categoryId);
+    if (!category) {
+      return res.status(400).json({
+        message: req.t("CATEGORY.NOT_FOUND"),
+      });
+    }
+    const deletedCategory = await CategoryService.deleteCategory(categoryId);
+    if (deletedCategory) {
+      await ProductService.deleteProductsWithCategory(deletedCategory._id);
+      return res.status(200).json({
+        message: req.t("CATEGORY.CATEGORY_DELETED"),
+      });
+    }
+    return res.status(400).json({
+      message: req.t("CATEGORY.CATEGORY_DELETION_FAILED"),
     });
   } catch (e) {
     next(e);
