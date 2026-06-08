@@ -1,8 +1,18 @@
+const mongoose = require("mongoose");
+
 const CategoryModel = require("../models/master/Category.model");
 
 exports.create = async (data) => {
   try {
     return await CategoryModel.create(data);
+  } catch (e) {
+    throw e;
+  }
+};
+
+exports.get = async (id) => {
+  try {
+    return await CategoryModel.findOne({ _id: id });
   } catch (e) {
     throw e;
   }
@@ -21,6 +31,14 @@ exports.getAllCategories = async (userId) => {
     return await CategoryModel.find({ addedBy: userId, isActive: true })
       .select("_id name isActive addedBy createdAt")
       .sort({ createdAt: -1 });
+  } catch (e) {
+    throw e;
+  }
+};
+
+exports.deleteCategory = async (id) => {
+  try {
+    return await CategoryModel.findByIdAndDelete(id);
   } catch (e) {
     throw e;
   }

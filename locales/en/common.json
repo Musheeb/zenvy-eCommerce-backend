@@ -22,6 +22,8 @@
     "CREATED": "Category created successfully.",
     "CATEGORY_ALREADY_EXISTS": "Category with the same name already exists.",
     "CATEGORIES_LIST_FETCHED": "Categories list fetched successfully",
-    "CATEGORY_DELETED": "Category and all the associated products deleted successfully"
+    "CATEGORY_DELETED": "Category and all the associated products deleted successfully",
+    "NOT_FOUND": "Category not found.",
+    "CATEGORY_DELETION_FAILED": "Category deletion operation failed."
   }
 }
