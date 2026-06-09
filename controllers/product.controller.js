@@ -42,3 +42,13 @@ exports.addProducts = async (req, res, next) => {
     next(e);
   }
 };
+
+exports.getProductsList = async (req, res, next) => {
+  try {
+    return res.status(200).json({
+      message: req.t("PRODUCT.PRODUCTS_FETCHED"),
+    });
+  } catch (e) {
+    throw e;
+  }
+};
