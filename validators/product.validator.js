@@ -16,8 +16,8 @@ exports.ProductSchema = {
       }),
     ),
     description: Joi.string().max(1000),
-    quantity: Joi.number(),
+    quantity: Joi.number().required(),
     currency: Joi.string(),
-    price: Joi.number(),
+    price: Joi.number().required(),
   }),
 };
