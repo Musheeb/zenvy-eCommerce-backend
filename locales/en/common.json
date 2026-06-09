@@ -16,7 +16,8 @@
   },
   "PRODUCT": {
     "PRODUCT_CREATED": "New product created successfully",
-    "SKU_ALREADY_EXISTS": "sku already exists."
+    "SKU_ALREADY_EXISTS": "sku already exists.",
+    "PRODUCTS_FETCHED": "Products fetched successfully"
   },
   "CATEGORY": {
     "CREATED": "Category created successfully.",
