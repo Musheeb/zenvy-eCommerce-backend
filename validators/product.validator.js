@@ -20,4 +20,9 @@ exports.ProductSchema = {
     currency: Joi.string(),
     price: Joi.number().required(),
   }),
+  GET_PRODUCTS: Joi.object({
+    limit: Joi.number(),
+    skip: Joi.number(),
+    search: Joi.string().allow("", null),
+  }),
 };

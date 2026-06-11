@@ -33,3 +33,36 @@ exports.deleteProductsWithCategory = async (categoryId) => {
     throw e;
   }
 };
+
+exports.getProductsList = async (limit, skip, search, user) => {
+  try {
+    const products = await ProductModel.aggregate([
+      {
+        $match: {
+          addedBy: user,
+        },
+      },
+      {
+        $match: { productTitle: new RegExp(search, "i") },
+      },
+      {
+        $facet: {
+          data: [
+            { $skip: skip },
+            { $limit: limit },
+            { $sort: { createdAt: -1 } },
+          ],
+          total: [{ $count: "count" }],
+        },
+      },
+    ]);
+    return {
+      total: products?.[0]?.total[0]?.count || 0,
+      limit,
+      skip,
+      data: products?.[0]?.data || [],
+    };
+  } catch (e) {
+    throw e;
+  }
+};

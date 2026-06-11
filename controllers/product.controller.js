@@ -32,6 +32,7 @@ exports.addProducts = async (req, res, next) => {
     const product = await ProductService.create({
       ...req.body,
       images: uploadedImages,
+      addedBy: req.user._id,
     });
 
     return res.status(201).json({
@@ -45,8 +46,19 @@ exports.addProducts = async (req, res, next) => {
 
 exports.getProductsList = async (req, res, next) => {
   try {
+    validate(ProductSchema.GET_PRODUCTS, req.query);
+    const limit = Number.parseInt(req.query.limit) || 10;
+    const skip = Number.parseInt(req.query.skip) || 0;
+    const search = req.query.search;
+    const products = await ProductService.getProductsList(
+      limit,
+      skip,
+      search,
+      req.user._id,
+    );
     return res.status(200).json({
       message: req.t("PRODUCT.PRODUCTS_FETCHED"),
+      ...products,
     });
   } catch (e) {
     throw e;
