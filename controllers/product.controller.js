@@ -4,6 +4,7 @@ const { ProductSchema } = require("../validators/product.validator");
 const ProductService = require("../services/product.services");
 
 const uploadToCloudinary = require("../utils/uploadToCloudinary");
+const cloudinary = require("../utils/cloudinary");
 
 exports.addProducts = async (req, res, next) => {
   try {
@@ -59,6 +60,29 @@ exports.getProductsList = async (req, res, next) => {
     return res.status(200).json({
       message: req.t("PRODUCT.PRODUCTS_FETCHED"),
       ...products,
+    });
+  } catch (e) {
+    throw e;
+  }
+};
+
+exports.deleteProduct = async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    const product = await ProductService.get(productId);
+    if (!product)
+      return res.status(400).json({
+        message: req.t("PRODUCT.PRODUCT_NOT_FOUND"),
+      });
+    const deletedProduct = await ProductService.deleteProduct(productId); // Deletes and returns the deleted product.
+    if (deletedProduct && deletedProduct?.images?.length > 0) {
+      // Delete all the images from cloudinary.
+      const publicIds = deletedProduct?.images?.map((image) => image?.publicId);
+      await Promise.all(publicIds.map((id) => cloudinary.deleteImage(id)));
+    }
+    return res.status(200).json({
+      message: req.t("PRODUCT.PRODUCT_DELETED_SUCCESSFULLY"),
+      data: deletedProduct,
     });
   } catch (e) {
     throw e;
