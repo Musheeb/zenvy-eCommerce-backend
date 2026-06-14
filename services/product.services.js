@@ -9,6 +9,14 @@ exports.create = async (data) => {
   }
 };
 
+exports.get = async (id) => {
+  try {
+    return await ProductModel.findOne({ _id: id });
+  } catch (e) {
+    throw e;
+  }
+};
+
 exports.checkSkuDuplication = async (sku) => {
   try {
     return await ProductModel.findOne({ sku });
@@ -34,23 +42,70 @@ exports.deleteProductsWithCategory = async (categoryId) => {
   }
 };
 
+exports.deleteProduct = async (productId) => {
+  try {
+    return await ProductModel.findByIdAndDelete(productId, {
+      new: true,
+    });
+  } catch (e) {
+    throw e;
+  }
+};
+
 exports.getProductsList = async (limit, skip, search, user) => {
   try {
+    const matchedCondition = {
+      addedBy: user,
+    };
+
+    if (search?.trim()) {
+      matchedCondition.productTitle = {
+        $regex: search.trim(),
+        $options: "i",
+      };
+    }
+
     const products = await ProductModel.aggregate([
       {
-        $match: {
-          addedBy: user,
-        },
-      },
-      {
-        $match: { productTitle: new RegExp(search, "i") },
+        $match: matchedCondition,
       },
       {
         $facet: {
           data: [
+            {
+              $lookup: {
+                from: "master_categories",
+                localField: "category",
+                foreignField: "_id",
+                as: "categories",
+              },
+            },
+            {
+              $unwind: {
+                path: "$categories",
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $project: {
+                _id: 1,
+                productTitle: 1,
+                sku: 1,
+                images: 1,
+                price: 1,
+                currency: 1,
+                addedBy: 1,
+                quantity: 1,
+                isActive: 1,
+                description: 1,
+                createdAt: 1,
+                category: 1,
+                categoryName: "$categories.name",
+              },
+            },
+            { $sort: { createdAt: -1 } },
             { $skip: skip },
             { $limit: limit },
-            { $sort: { createdAt: -1 } },
           ],
           total: [{ $count: "count" }],
         },
