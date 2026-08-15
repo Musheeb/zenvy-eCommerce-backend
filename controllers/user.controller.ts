@@ -1,14 +1,21 @@
-const UserModel = require("../models/User.model");
-const { validate } = require("../validators/validate.validator");
-const { UserSchema } = require("../validators/user.validator");
-const generateJwt = require("../utils/generateJwt");
+import UserModel from "../models/User.model";
+import { validate } from "../validators/validate.validator";
+import { UserSchema } from "../validators/user.validator";
+import generateJwt from "../utils/generateJwt";
+import { Request, Response, NextFunction } from "express";
 
-const UserService = require("../services/user.services");
-const ResetPasswordService = require("../services/resetPassword.services");
+import UserService from "../services/user.services";
+import ResetPasswordService from "../services/resetPassword.services";
 
-const { sendEmail } = require("../emails/sendEmail");
+import type { RegisterBody } from "../types/user.types.ts";
 
-exports.register = async (req, res, next) => {
+import { sendEmail } from "../emails/sendEmail";
+
+export const register = async (
+  req: Request<{}, {}, RegisterBody>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     validate(UserSchema.REGISTER, req.body);
     const verifyEmailAddress = await UserService.verifyEmailAddress(
@@ -43,7 +50,11 @@ exports.register = async (req, res, next) => {
   }
 };
 
-exports.login = async (req, res, next) => {
+export const login = async (
+  req: Request<{}, {}, RegisterBody>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     validate(UserSchema.LOGIN, req.body);
     const password = req.body.password;
@@ -85,7 +96,11 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.forgotPassword = async (req, res, next) => {
+export const forgotPassword = async (
+  req: Request<{}, {}, RegisterBody>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     validate(UserSchema.FORGOT_PASSWORD, req.body);
     const email = req.body.email.trim().toLowerCase();
@@ -106,13 +121,21 @@ exports.forgotPassword = async (req, res, next) => {
   }
 };
 
-exports.resetPassword = async (req, res, next) => {
+export const resetPassword = async (
+  req: Request<
+    { token: string },
+    unknown,
+    { password: string; confirmPassword: string }
+  >,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     validate(UserSchema.RESET_PASSWORD_TOKEN, req.params);
     validate(UserSchema.RESET_PASSWORD, req.body);
     const { token } = req.params;
     const { password, confirmPassword } = req.body;
-    if (password.toString() !== confirmPassword.toString()) {
+    if (password !== confirmPassword) {
       return res.status(400).json({
         message: req.t("AUTH.PASSWORD_CONFIRM_PASSWORD_DIFFERENT"),
       });
@@ -125,7 +148,7 @@ exports.resetPassword = async (req, res, next) => {
       });
     }
     const hashedPassword = await UserService.getHashedPassword(password);
-    await UserService.patch(tokenDocument?.user, { password: hashedPassword });
+    await UserService.patch(tokenDocument.user, { password: hashedPassword });
     await ResetPasswordService.removeAll(tokenDocument.user);
     return res.status(200).json({
       message: req.t("AUTH.PASSWORD_RESET_SUCCESSFULLY"),

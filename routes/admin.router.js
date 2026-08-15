@@ -6,4 +6,15 @@ module.exports = async (app) => {
       next(e);
     }
   });
+  app.get("/get-statistics", async (req, res, next) => {
+    try {
+      // Get new arrivals.
+
+      //Get low stock count.
+
+      return res.send("Holaaa");
+    } catch (e) {
+      next(e);
+    }
+  });
 };
