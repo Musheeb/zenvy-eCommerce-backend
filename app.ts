@@ -1,10 +1,17 @@
-require("dotenv").config({ quiet: true });
-const express = require("express");
+import dotenv from "dotenv";
+dotenv.config({ quiet: true });
+import express from "express";
 const app = express();
-const cors = require("cors");
-const morgan = require("morgan");
-const middleware = require("i18next-http-middleware");
-const i18next = require("./config/i18n.js");
+import cors from "cors";
+import morgan from "morgan";
+import middleware from "i18next-http-middleware";
+import i18next from "i18next";
+
+import { Request, Response, NextFunction } from "express";
+
+interface AppError extends Error {
+  statusCode?: number;
+}
 
 app.use(
   cors({
@@ -33,7 +40,7 @@ categoryRoutes(app);
 const PORT = process.env.PORT || 3000;
 const connectDb = require("./db/config.js");
 
-app.use((err, req, res, next) => {
+app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
   console.log(err);
   res.status(err.statusCode || 500).json({
     message: err.message || "Internal server error",

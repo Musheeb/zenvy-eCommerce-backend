@@ -121,3 +121,11 @@ exports.getProductsList = async (limit, skip, search, user) => {
     throw e;
   }
 };
+
+exports.getNewArrivals = async () => {
+  try {
+  } catch (e) {
+    console.log("Error occured in 'getNewArrivals' method", e);
+    throw e;
+  }
+};
