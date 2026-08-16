@@ -1,8 +1,14 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-const UserModel = require("../models/User.model");
+import type { Request, Response, NextFunction } from "express";
 
-module.exports = async (req, res, next) => {
+import UserModel from "../models/User.model";
+
+interface JwtPayloadWithId extends jwt.JwtPayload {
+  _id: string;
+}
+
+const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const bearerRaw = req.headers["authorization"];
     if (!bearerRaw || !bearerRaw.startsWith("Bearer ")) {
@@ -11,10 +17,15 @@ module.exports = async (req, res, next) => {
       });
     }
     const token = bearerRaw.split(" ")[1];
+    if (!token) throw new Error("Token not found");
+    if (!process.env.JWT_ACCESS_TOKEN_SECRET)
+      throw new Error("Key missing from environment");
     const decodedTokenDetails = jwt.verify(
       token,
       process.env.JWT_ACCESS_TOKEN_SECRET,
-    );
+    ) as JwtPayloadWithId;
+    if (!decodedTokenDetails._id)
+      throw new Error("ID not found in the payload.");
     const user = await UserModel.findOne({ _id: decodedTokenDetails._id });
     if (!user) {
       return res.status(401).json({
@@ -23,7 +34,7 @@ module.exports = async (req, res, next) => {
     }
     req.user = user;
     next();
-  } catch (e) {
+  } catch (e: any) {
     if (e.name === "TokenExpiredError") {
       return res.status(401).json({
         message: req.t("AUTH.UNAUTHORIZED"),
@@ -37,3 +48,5 @@ module.exports = async (req, res, next) => {
     }
   }
 };
+
+export default auth;

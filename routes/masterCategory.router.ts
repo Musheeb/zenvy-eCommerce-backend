@@ -1,4 +1,5 @@
-const auth = require("../middlewares/auth.middleware");
+import type { Application } from "express";
+import auth from "../middlewares/auth.middleware";
 
 const {
   addCategory,
@@ -6,8 +7,10 @@ const {
   deleteCategory,
 } = require("../controllers/master/category.controller");
 
-module.exports = async (app) => {
+const categoryRouter = async (app: Application) => {
   app.post("/add-category", auth, addCategory);
   app.get("/get-categories", auth, getCategories);
   app.delete("/delete-category/:categoryId", auth, deleteCategory);
 };
+
+export default categoryRouter;

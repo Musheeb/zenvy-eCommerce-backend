@@ -1,7 +1,7 @@
-const i18next = require("i18next");
-const Backend = require("i18next-fs-backend");
-const middleware = require("i18next-http-middleware");
-const path = require("path");
+import i18next from "i18next";
+import Backend from "i18next-fs-backend";
+import middleware from "i18next-http-middleware";
+import path from "path";
 
 i18next
   .use(Backend)
@@ -19,4 +19,4 @@ i18next
     },
   });
 
-module.exports = i18next;
+export default i18next;

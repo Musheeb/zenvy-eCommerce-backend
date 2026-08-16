@@ -5,8 +5,8 @@ import express from "express";
 const app = express();
 import cors from "cors";
 import morgan from "morgan";
+import i18next from "./config/i18n";
 import middleware from "i18next-http-middleware";
-import i18next from "i18next";
 
 import { Request, Response, NextFunction } from "express";
 
@@ -30,8 +30,8 @@ app.use(middleware.handle(i18next));
 
 const adminRoutes = require("./routes/admin.router.js");
 import userRoutes from "./routes/user.router";
-const productRoutes = require("./routes/product.router.js");
-const categoryRoutes = require("./routes/masterCategory.router.js");
+import productRoutes from "./routes/product.router";
+import categoryRoutes from "./routes/masterCategory.router";
 
 adminRoutes(app);
 userRoutes(app);
@@ -39,7 +39,7 @@ productRoutes(app);
 categoryRoutes(app);
 
 const PORT = process.env.PORT || 3000;
-const connectDb = require("./db/config.js");
+import connectDb from "./db/config";
 
 app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
   console.log(err);

@@ -1,7 +1,24 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+import mongoose, { Document, Schema } from "mongoose";
+import bcrypt from "bcrypt";
 
-const UserSchema = new mongoose.Schema(
+interface IUser {
+  username: string;
+  email: string;
+  role: "user" | "admin";
+  profilePicture: string | null;
+  phoneNumber: string | null;
+  gender?: "male" | "female";
+  dob: Date | null;
+  isBlocked: boolean;
+  isActive: boolean;
+  password: string;
+  googleId: string | null;
+  authplatform: "local" | "google";
+}
+
+export interface UserDocument extends IUser, Document {}
+
+const UserSchema = new Schema<UserDocument>(
   {
     username: {
       type: String,
@@ -70,10 +87,14 @@ UserSchema.pre("save", async function () {
 
   try {
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-  } catch (error) {
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, salt);
+    }
+  } catch (error: any) {
     console.log("Error while updating the password. Error: ", error.message);
   }
 });
 
-module.exports = mongoose.model("User", UserSchema, "users");
+const UserModel = mongoose.model<UserDocument>("User", UserSchema, "users");
+
+export default UserModel;
