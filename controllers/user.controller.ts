@@ -9,7 +9,7 @@ import ResetPasswordService from "../services/resetPassword.services";
 
 import type { RegisterBody } from "../types/user.types.ts";
 
-import { sendEmail } from "../emails/sendEmail";
+import sendEmail from "../emails/sendEmail";
 
 export const register = async (
   req: Request<{}, {}, RegisterBody>,
