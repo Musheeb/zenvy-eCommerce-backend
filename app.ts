@@ -1,5 +1,6 @@
-import dotenv from "dotenv";
-dotenv.config({ quiet: true });
+import "dotenv/config";
+// import dotenv from "dotenv";
+// dotenv.config({ quiet: true });
 import express from "express";
 const app = express();
 import cors from "cors";
@@ -28,7 +29,7 @@ app.use(morgan("dev"));
 app.use(middleware.handle(i18next));
 
 const adminRoutes = require("./routes/admin.router.js");
-const userRoutes = require("./routes/user.router.js");
+import userRoutes from "./routes/user.router";
 const productRoutes = require("./routes/product.router.js");
 const categoryRoutes = require("./routes/masterCategory.router.js");
 

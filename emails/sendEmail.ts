@@ -1,10 +1,8 @@
 const { Resend } = require("resend");
-const {
-  forgotPasswordTemplate,
-} = require("./templates/forgetPassword.template");
+import { forgotPasswordTemplate } from "./templates/forgetPassword.template";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-exports.sendEmail = async (resetPasswordLink, email) => {
+const sendEmail = async (resetPasswordLink: string, email: string) => {
   const { data, error } = await resend.emails.send({
     from: process.env.FROM,
     to: email,
@@ -18,3 +16,5 @@ exports.sendEmail = async (resetPasswordLink, email) => {
   console.log("Email sent successfully. Data: ", data);
   return data;
 };
+
+export default sendEmail;
