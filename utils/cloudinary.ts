@@ -1,6 +1,7 @@
-const cloudinary = require("cloudinary").v2;
+import cldnry from "cloudinary";
+const cloudinary = cldnry.v2;
 
-exports.deleteImage = async (publicId) => {
+export const deleteImage = async (publicId: string) => {
   try {
     // console.log("Deleting image from cloudinary -> ", publicId);
     const result = await cloudinary.uploader.destroy(publicId);

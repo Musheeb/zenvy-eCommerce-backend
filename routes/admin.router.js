@@ -12,7 +12,7 @@ module.exports = async (app) => {
 
       //Get low stock count.
 
-      return res.send("Holaaa");
+      return res.send("Dashboard statistics API is working ✅");
     } catch (e) {
       next(e);
     }

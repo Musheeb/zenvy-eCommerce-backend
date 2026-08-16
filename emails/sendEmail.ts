@@ -2,7 +2,7 @@ const { Resend } = require("resend");
 import { forgotPasswordTemplate } from "./templates/forgetPassword.template";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const sendEmail = async (resetPasswordLink: string, email: string) => {
+const sendEmail = async (resetPasswordLink: string | null, email: string) => {
   const { data, error } = await resend.emails.send({
     from: process.env.FROM,
     to: email,
