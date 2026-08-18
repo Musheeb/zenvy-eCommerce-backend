@@ -4,7 +4,13 @@ import { UserSchema } from "../validators/user.validator";
 import generateJwt from "../utils/generateJwt";
 import { Request, Response, NextFunction } from "express";
 
-import UserService from "../services/user.services";
+import {
+  create,
+  patch,
+  verifyEmailAddress,
+  getHashedPassword,
+  validateUserPassword,
+} from "../services/user.services";
 import ResetPasswordService from "../services/resetPassword.services";
 
 import type { RegisterBody } from "../types/user.types.ts";
@@ -18,17 +24,14 @@ export const register = async (
 ) => {
   try {
     validate(UserSchema.REGISTER, req.body);
-    const verifyEmailAddress = await UserService.verifyEmailAddress(
-      req.body.email,
-    );
-    if (verifyEmailAddress) {
+    const existingUser = await verifyEmailAddress(req.body.email);
+    if (existingUser) {
       return res.status(400).json({
         message: req.t("AUTH.EMAIL_ALREADY_EXISTS"),
       });
     }
-    const user = await UserService.create(req.body);
-    const userObj = user.toObject();
-    delete userObj.password;
+    const user = await create(req.body);
+    const { password, ...userObj } = user.toObject();
     const { accessToken, refreshToken } = generateJwt({
       _id: user._id,
       email: req.body.email,
@@ -59,16 +62,13 @@ export const login = async (
     validate(UserSchema.LOGIN, req.body);
     const password = req.body.password;
     const email = req.body.email.trim().toLowerCase();
-    const user = await UserService.verifyEmailAddress(email);
+    const user = await verifyEmailAddress(email);
     if (!user) {
       return res.status(400).json({
         message: req.t("AUTH.INVALID_CREDENTIALS"),
       });
     }
-    const validatedPassword = await UserService.validateUserPassword(
-      user,
-      password,
-    );
+    const validatedPassword = await validateUserPassword(user, password);
     if (!validatedPassword) {
       return res.status(400).json({
         message: req.t("AUTH.INVALID_CREDENTIALS"),
@@ -104,7 +104,7 @@ export const forgotPassword = async (
   try {
     validate(UserSchema.FORGOT_PASSWORD, req.body);
     const email = req.body.email.trim().toLowerCase();
-    const user = await UserService.verifyEmailAddress(email);
+    const user = await verifyEmailAddress(email);
     if (!user) {
       return res.status(400).json({
         message: req.t("AUTH.EMAIL_DOES_NOT_EXIST"),
@@ -147,8 +147,8 @@ export const resetPassword = async (
         message: req.t("AUTH.SESSION_EXPIRED"),
       });
     }
-    const hashedPassword = await UserService.getHashedPassword(password);
-    await UserService.patch(tokenDocument.user, { password: hashedPassword });
+    const hashedPassword = await getHashedPassword(password);
+    await patch(tokenDocument.user, { password: hashedPassword });
     await ResetPasswordService.removeAll(tokenDocument.user);
     return res.status(200).json({
       message: req.t("AUTH.PASSWORD_RESET_SUCCESSFULLY"),
