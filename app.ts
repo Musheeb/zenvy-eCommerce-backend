@@ -19,7 +19,7 @@ app.use(
     origin:
       process.env.STAGE === "development"
         ? "http://localhost:5173"
-        : "frontendURLHere",
+        : process.env.FRONTEND_URL,
     credentials: true,
   }),
 );
