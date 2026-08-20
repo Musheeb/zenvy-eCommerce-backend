@@ -1,4 +1,4 @@
-exports.forgotPasswordTemplate = (resetLink) => {
+export const forgotPasswordTemplate = (resetLink: string) => {
   return `
 <html>
   <head>

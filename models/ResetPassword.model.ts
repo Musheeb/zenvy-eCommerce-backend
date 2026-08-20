@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const ResetPasswordSchema = new mongoose.Schema(
   {
@@ -22,8 +22,10 @@ const ResetPasswordSchema = new mongoose.Schema(
   },
 );
 
-module.exports = mongoose.model(
+const ResetPasswordModel = mongoose.model(
   "ResetPassword",
   ResetPasswordSchema,
   "reset_passwords",
 );
+
+export default ResetPasswordModel;
