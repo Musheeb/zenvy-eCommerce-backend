@@ -1,8 +1,8 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const MONGO_ID_REGEX = /^[0-9a-fA-F]{24}$/;
 
-exports.ProductSchema = {
+export const ProductSchema = {
   ADD_PRODUCT: Joi.object({
     productTitle: Joi.string().max(50).required(),
     category: Joi.string().pattern(MONGO_ID_REGEX).required().strict(),

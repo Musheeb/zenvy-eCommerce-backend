@@ -1,8 +1,8 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const MONGO_ID_REGEX = /^[0-9a-fA-F]{24}$/;
 
-exports.CategorySchema = {
+export const CategorySchema = {
   ADD_CATEGORY: Joi.object({
     name: Joi.string().required(),
   }),

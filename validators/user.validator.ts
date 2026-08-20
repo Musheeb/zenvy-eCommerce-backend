@@ -1,6 +1,6 @@
-const Joi = require("joi");
+import Joi from "joi";
 
-exports.UserSchema = {
+export const UserSchema = {
   REGISTER: Joi.object({
     username: Joi.string().min(3).max(40).required(),
     email: Joi.string().email().required(),

@@ -11,7 +11,12 @@ import {
   getHashedPassword,
   validateUserPassword,
 } from "../services/user.services";
-import ResetPasswordService from "../services/resetPassword.services";
+import {
+  generateAndSaveResetPasswordLink,
+  getHashtoken,
+  getByToken,
+  removeAll,
+} from "../services/resetPassword.services";
 
 import type { RegisterBody } from "../types/user.types.ts";
 
@@ -110,8 +115,7 @@ export const forgotPassword = async (
         message: req.t("AUTH.EMAIL_DOES_NOT_EXIST"),
       });
     }
-    const resetPasswordLink =
-      await ResetPasswordService.generateAndSaveResetPasswordLink(user._id);
+    const resetPasswordLink = await generateAndSaveResetPasswordLink(user._id);
     await sendEmail(resetPasswordLink, email);
     return res.status(200).json({
       message: req.t("AUTH.LINK_SENT_TO_PROVIDED_EMAIL"),
@@ -140,8 +144,8 @@ export const resetPassword = async (
         message: req.t("AUTH.PASSWORD_CONFIRM_PASSWORD_DIFFERENT"),
       });
     }
-    const hashedToken = ResetPasswordService.getHashtoken(token);
-    const tokenDocument = await ResetPasswordService.getByToken(hashedToken);
+    const hashedToken = getHashtoken(token);
+    const tokenDocument = await getByToken(hashedToken);
     if (!tokenDocument || tokenDocument.tokenValidTill < new Date()) {
       return res.status(401).json({
         message: req.t("AUTH.SESSION_EXPIRED"),
@@ -149,7 +153,7 @@ export const resetPassword = async (
     }
     const hashedPassword = await getHashedPassword(password);
     await patch(tokenDocument.user, { password: hashedPassword });
-    await ResetPasswordService.removeAll(tokenDocument.user);
+    await removeAll(tokenDocument.user);
     return res.status(200).json({
       message: req.t("AUTH.PASSWORD_RESET_SUCCESSFULLY"),
     });

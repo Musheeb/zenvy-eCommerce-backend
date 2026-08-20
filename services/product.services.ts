@@ -1,7 +1,12 @@
-const ProductModel = require("../models/Product.model");
-const cloudinary = require("../utils/cloudinary");
+import ProductModel from "../models/Product.model";
+// import cloudinary from "cloudinary";
+import cldnry from "cloudinary";
+const cloudinary = cldnry.v2;
+import { Types, QueryFilter } from "mongoose";
 
-exports.create = async (data) => {
+import type { Product } from "../types/product.types.ts";
+
+export const create = async (data: Product) => {
   try {
     return await ProductModel.create(data);
   } catch (e) {
@@ -9,7 +14,7 @@ exports.create = async (data) => {
   }
 };
 
-exports.get = async (id) => {
+export const get = async (id: string | Types.ObjectId) => {
   try {
     return await ProductModel.findOne({ _id: id });
   } catch (e) {
@@ -17,7 +22,7 @@ exports.get = async (id) => {
   }
 };
 
-exports.checkSkuDuplication = async (sku) => {
+export const checkSkuDuplication = async (sku: string) => {
   try {
     return await ProductModel.findOne({ sku });
   } catch (e) {
@@ -25,14 +30,16 @@ exports.checkSkuDuplication = async (sku) => {
   }
 };
 
-exports.deleteProductsWithCategory = async (categoryId) => {
+export const deleteProductsWithCategory = async (
+  categoryId: string | Types.ObjectId,
+) => {
   try {
     const products = await ProductModel.find({ category: categoryId });
     if (products.length === 0) return;
     for (let product of products) {
       await Promise.all(
         product?.images?.map((image) => {
-          return cloudinary.deleteImage(image?.publicId);
+          return cloudinary.uploader.destroy(image?.publicId);
         }),
       );
       await ProductModel.findByIdAndDelete(product._id);
@@ -42,7 +49,9 @@ exports.deleteProductsWithCategory = async (categoryId) => {
   }
 };
 
-exports.deleteProduct = async (productId) => {
+export const deleteProductService = async (
+  productId: string | Types.ObjectId,
+) => {
   try {
     return await ProductModel.findByIdAndDelete(productId, {
       new: true,
@@ -52,9 +61,14 @@ exports.deleteProduct = async (productId) => {
   }
 };
 
-exports.getProductsList = async (limit, skip, search, user) => {
+export const getProductsListService = async (
+  limit: number,
+  skip: number,
+  search: string,
+  user: string | Types.ObjectId,
+) => {
   try {
-    const matchedCondition = {
+    const matchedCondition: QueryFilter<Product> = {
       addedBy: user,
     };
 
@@ -122,7 +136,7 @@ exports.getProductsList = async (limit, skip, search, user) => {
   }
 };
 
-exports.getNewArrivals = async () => {
+export const getNewArrivals = async () => {
   try {
   } catch (e) {
     console.log("Error occured in 'getNewArrivals' method", e);

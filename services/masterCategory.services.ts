@@ -1,8 +1,14 @@
-const mongoose = require("mongoose");
+import { Types, QueryFilter } from "mongoose";
 
-const CategoryModel = require("../models/master/Category.model");
+import CategoryModel from "../models/master/Category.model";
 
-exports.create = async (data) => {
+interface MasterCategory {
+  name: string;
+  isActive?: boolean;
+  addedBy: string | Types.ObjectId;
+}
+
+export const create = async (data: MasterCategory) => {
   try {
     return await CategoryModel.create(data);
   } catch (e) {
@@ -10,7 +16,7 @@ exports.create = async (data) => {
   }
 };
 
-exports.get = async (id) => {
+export const get = async (id: string | Types.ObjectId) => {
   try {
     return await CategoryModel.findOne({ _id: id });
   } catch (e) {
@@ -18,7 +24,9 @@ exports.get = async (id) => {
   }
 };
 
-exports.getByName = async (query) => {
+export const getByName = async (
+  query: QueryFilter<{ name: string; isActive: boolean }>,
+) => {
   try {
     return await CategoryModel.findOne(query);
   } catch (e) {
@@ -26,7 +34,7 @@ exports.getByName = async (query) => {
   }
 };
 
-exports.getAllCategories = async (userId) => {
+export const getAllCategories = async (userId: string | Types.ObjectId) => {
   try {
     return await CategoryModel.find({ addedBy: userId, isActive: true })
       .select("_id name isActive addedBy createdAt")
@@ -36,7 +44,7 @@ exports.getAllCategories = async (userId) => {
   }
 };
 
-exports.deleteCategory = async (id) => {
+export const deleteCategory = async (id: string | Types.ObjectId) => {
   try {
     return await CategoryModel.findByIdAndDelete(id);
   } catch (e) {
