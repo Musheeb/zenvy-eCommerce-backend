@@ -5,6 +5,7 @@ import {
   login,
   forgotPassword,
   resetPassword,
+  refreshAccessToken,
 } from "../controllers/user.controller";
 
 export default async (app: Application) => {
@@ -12,4 +13,5 @@ export default async (app: Application) => {
   app.post("/login", login);
   app.post("/forgot-password", forgotPassword);
   app.post("/reset-password/:token", resetPassword);
+  app.post("/auth/refreshToken", refreshAccessToken);
 };

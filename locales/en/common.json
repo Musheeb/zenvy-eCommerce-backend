@@ -12,7 +12,8 @@
     "UNAUTHORIZED": "Session expired",
     "AUTH_TOKEN_MISSING_OR_EXPIRED": "Authorization token missing or expired.",
     "USER_NOT_FOUND": "User not found!",
-    "TEMPERED_TOKEN": "Unauthorized access! Token is tempered."
+    "TEMPERED_TOKEN": "Unauthorized access! Token is tempered.",
+    "REFRESH_TOKEN_NOT_FOUND_IN_COOKIE": "Refresh token not found"
   },
   "PRODUCT": {
     "PRODUCT_CREATED": "New product created successfully",
