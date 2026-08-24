@@ -21,7 +21,7 @@ const generateJwt = (payload: JwtPayload) => {
     });
 
     const accessToken = jwt.sign(payload, accessSecret, {
-      expiresIn: "1m",
+      expiresIn: "8h",
     });
 
     return {

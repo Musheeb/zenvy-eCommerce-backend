@@ -1,8 +1,12 @@
 import UserModel from "../models/User.model";
+import jwt from "jsonwebtoken";
 import { validate } from "../validators/validate.validator";
 import { UserSchema } from "../validators/user.validator";
 import generateJwt from "../utils/generateJwt";
+import generateAccessToken from "../utils/generateAccessToken";
+
 import { Request, Response, NextFunction } from "express";
+import type { UserAccessTokenPayload } from "../types/user.types";
 
 import {
   create,
@@ -96,7 +100,6 @@ export const login = async (
       accessToken,
     });
   } catch (e) {
-    console.log(e);
     next(e);
   }
 };
@@ -158,6 +161,43 @@ export const resetPassword = async (
       message: req.t("AUTH.PASSWORD_RESET_SUCCESSFULLY"),
     });
   } catch (e) {
+    next(e);
+  }
+};
+
+export const refreshAccessToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { refreshToken } = req.cookies;
+    if (!refreshToken) {
+      return res.status(401).json({
+        message: req.t("AUTH.REFRESH_TOKEN_NOT_FOUND_IN_COOKIE"),
+      });
+    }
+    if (!process.env.JWT_REFRESH_TOKEN_SECRET) {
+      throw new Error("Key missing in the environment");
+    }
+    const decodedToken = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_TOKEN_SECRET,
+    ) as UserAccessTokenPayload;
+    const newAccessToken = await generateAccessToken({
+      _id: decodedToken._id,
+      email: decodedToken.email,
+      role: decodedToken.role,
+    });
+    return res.send({
+      accessToken: newAccessToken,
+    });
+  } catch (e: any) {
+    if (e.name === "TokenExpiredError") {
+      return res.status(401).json({
+        message: req.t("AUTH.UNAUTHORIZED"),
+      });
+    }
     next(e);
   }
 };
