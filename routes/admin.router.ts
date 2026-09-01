@@ -1,5 +1,7 @@
 import ProductModel from "../models/Product.model";
 
+import auth from "../middlewares/auth.middleware";
+
 import { Application, Request, Response, NextFunction } from "express";
 
 module.exports = async (app: Application) => {
@@ -15,6 +17,7 @@ module.exports = async (app: Application) => {
   );
   app.get(
     "/get-statistics",
+    auth,
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const currentTime = new Date();
@@ -30,9 +33,20 @@ module.exports = async (app: Application) => {
           quantity: { $lte: LOW_STOCK_LIMIT },
         });
 
+        //Get inventory items count.
+        const inventoryItemsRaw = await ProductModel.aggregate([
+          {
+            $group: {
+              _id: "_id",
+              inventoryCount: { $sum: "$quantity" },
+            },
+          },
+        ]);
+
         return res.status(200).json({
           lowStockCount,
           newArrivalsCount,
+          inventoryItemsCount: inventoryItemsRaw[0]?.inventoryCount ?? 0,
         });
       } catch (e) {
         next(e);
