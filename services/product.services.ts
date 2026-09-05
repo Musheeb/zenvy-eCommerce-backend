@@ -30,6 +30,12 @@ export const checkSkuDuplication = async (sku: string) => {
   }
 };
 
+//All the cateogries with the product will also be deleted.
+/**
+ * 
+ * @param categoryId - String
+ * @returns - Detroyer object.
+ */
 export const deleteProductsWithCategory = async (
   categoryId: string | Types.ObjectId,
 ) => {
@@ -49,6 +55,12 @@ export const deleteProductsWithCategory = async (
   }
 };
 
+//Delete product from the database.
+/**
+ * 
+ * @param productId - String
+ * @returns - Deleted product object.
+ */
 export const deleteProductService = async (
   productId: string | Types.ObjectId,
 ) => {
